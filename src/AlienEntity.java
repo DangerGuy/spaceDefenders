@@ -4,20 +4,18 @@
  * Date:        Mar 7, 2021
  * Purpose:     To create the alien ship entities
  ******************************************************************************************/
-import java.awt.Graphics2D;
+
 import java.awt.geom.AffineTransform;
 
 public class AlienEntity extends Entity {
 
-    private long firingInterval = 5000; //firing interval
     private long lastFire = 0; // laster fired time
-    private double moveSpeed = 200; // horizontal speed
-    private Game game; // the game in which the alien exists
+    private final Game game; // the game in which the alien exists
 
     /* 
      * constructor for alien ship
      */
-    public AlienEntity(Game g, String r, int newX, int newY, String newT, Graphics2D graphics) {
+    public AlienEntity(Game g, String r, int newX, int newY, String newT) {
         super(r, newX, newY, newT); // calls the constructor in Entity
         game = g;
     } // constructor
@@ -27,14 +25,15 @@ public class AlienEntity extends Entity {
      */
     public AlienShotEntity tryFire() {
         if (this.getY() < 1000 && this.getY() > 0) {
+            //firing interval
+            long firingInterval = 5000;
             if ((System.currentTimeMillis() - lastFire) < firingInterval) {
                 return new AlienShotEntity(game, "sprites/shot.png", 0, 10000, "");
             } // if
 
             // otherwise add a shot
             lastFire = System.currentTimeMillis();
-            AlienShotEntity shot = new AlienShotEntity(game, "sprites/shot.png", this.getX() + 10, this.getY() - 30, "shot");
-            return shot;
+            return new AlienShotEntity(game, "sprites/shot.png", this.getX() + 10, this.getY() - 30, "shot");
         } //if
         return new AlienShotEntity(game, "sprites/shot.png", 0, 10000, "");
     } //tryFire
@@ -50,6 +49,8 @@ public class AlienEntity extends Entity {
         double diffX = (game.getShipCords()[0] + 50 - x);
         double diffY = (game.getShipCords()[1] + 50 - y);
         double hypo = Math.sqrt(diffY * diffY + diffX * diffX);
+        // horizontal speed
+        double moveSpeed = 200;
         double ratio = hypo / moveSpeed;
         if (hypo > 400) {
             dx = diffX / ratio;

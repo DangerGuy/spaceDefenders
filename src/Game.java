@@ -16,7 +16,7 @@ import java.util.ArrayList;
 public class Game extends Canvas {
 
     private static final long serialVersionUID = 1L;
-    private BufferStrategy strategy; // take advantage of accelerated graphics
+    private final BufferStrategy strategy; // take advantage of accelerated graphics
     private boolean waitingForSpacePress = true; // true if game held up until
     private boolean waitingForMousePress = true; // true if game held up until
     // a key is pressed
@@ -28,7 +28,6 @@ public class Game extends Canvas {
     private boolean mousePressed = false; // true if left mouse currently pressed
 
     private boolean gameWon = false; //true if game won
-    private boolean gameRunning = true; //true if game is running
 
     //storage for all images used in the game
     private static BufferedImage img = null;
@@ -51,11 +50,10 @@ public class Game extends Canvas {
     private int healthLevel = 1;
     private int shotLevel = 1;
 
-    private ArrayList < Entity > entities = new ArrayList < Entity > (); // list of entities
-    private ArrayList < Entity > removeEntities = new ArrayList < Entity > (); // list of entities
+    private final ArrayList < Entity > entities = new ArrayList<>(); // list of entities
+    private final ArrayList < Entity > removeEntities = new ArrayList<>(); // list of entities
 
     private Entity ship; // the ship
-    private Entity boss; // the boss
 
     private double moveSpeed = 300; // movement speed in each direction
     private long lastFire = 0; // time last shot fired
@@ -123,18 +121,19 @@ public class Game extends Canvas {
 
         // create the ship and put in center of screen
         if (level == 2) {
-            ship = new ShipEntity(this, "sprites/level2.png", 850, 500, "ship");
+            ship = new ShipEntity(this, "./sprites/level2.png", 850, 500, "ship");
         } else if (level == 3) {
-            ship = new ShipEntity(this, "sprites/level3.png", 850, 500, "ship");
+            ship = new ShipEntity(this, "./sprites/level3.png", 850, 500, "ship");
         } else {
-            ship = new ShipEntity(this, "sprites/resize.png", 850, 500, "ship");
+            ship = new ShipEntity(this, "./sprites/resize.png", 850, 500, "ship");
         }
         entities.add(ship);
 
         // create bosses on levels 2 and 3
         alienCount = 0;
         if (level == 2 || level == 3) {
-            boss = new BossAlienEntity(this, "sprites/boss.png", 2000, 250, "boss", g);
+            // the boss
+            Entity boss = new BossAlienEntity(this, "./sprites/boss.png", 2000, 250, "boss");
             alienCount++;
             bossHealth = 5;
             entities.add(boss);
@@ -142,13 +141,8 @@ public class Game extends Canvas {
 
         //creates the kamikaze entities
         for (int i = 0; i < 2 * level; i++) {
-            if (i % 2 == 0) {
-                alien = new KamikazeAlienEntity(this, "sprites/kamikaze.png", (int)(Math.random() * 2000),
-                    (int)(Math.random() * -1000), "kamikaze", g);
-            } else {
-                alien = new KamikazeAlienEntity(this, "sprites/kamikaze.png", (int)(Math.random() * 2000),
-                    (int)(Math.random() * -1000), "kamikaze", g);
-            } //else
+            alien = new KamikazeAlienEntity(this, "./sprites/kamikaze.png", (int)(Math.random() * 2000),
+                (int)(Math.random() * -1000), "kamikaze");
             entities.add(alien);
             alienCount++;
         } //for
@@ -156,11 +150,11 @@ public class Game extends Canvas {
         //creates the shooting alien entities
         for (int i = 0; i < 10 + 5 * (level - 1); i++) {
             if (i % 2 == 0) {
-                alien = new AlienEntity(this, "sprites/aliensprite.png", (int)(Math.random() * 2000),
-                    (int)(Math.random() * -1000), "alien", g);
+                alien = new AlienEntity(this, "./sprites/aliensprite.png", (int)(Math.random() * 2000),
+                    (int)(Math.random() * -1000), "alien");
             } else {
-                alien = new AlienEntity(this, "sprites/aliensprite.png", (int)(Math.random() * 2000),
-                    (int)((Math.random() * 1000) + 1000), "alien", g);
+                alien = new AlienEntity(this, "./sprites/aliensprite.png", (int)(Math.random() * 2000),
+                    (int)((Math.random() * 1000) + 1000), "alien");
             } //else
             entities.add(alien);
             alienCount++;
@@ -246,7 +240,7 @@ public class Game extends Canvas {
         } // if
         // add a shot
         lastFire = System.currentTimeMillis();
-        ShotEntity shot = new ShotEntity(this, "sprites/shipshot.png", ship.getX() + 50, ship.getY() + 50, "shot");
+        ShotEntity shot = new ShotEntity(this, "./sprites/shipshot.png", ship.getX() + 50, ship.getY() + 50, "shot");
         entities.add(shot);
     } // tryToFire
 
@@ -305,7 +299,7 @@ public class Game extends Canvas {
 
         // add a bomb
         lastFire = System.currentTimeMillis();
-        BombEntity shot = new BombEntity(this, "sprites/bomb.png", ship.getX() + 10, ship.getY() - 30, "shot");
+        BombEntity shot = new BombEntity(this, "./sprites/bomb.png", ship.getX() + 10, ship.getY() - 30, "shot");
         entities.add(shot);
         bombNum--;
     } // tryToBomb
@@ -317,7 +311,8 @@ public class Game extends Canvas {
         long lastLoopTime = System.currentTimeMillis();
 
         // keep loop running until game ends
-        while (gameRunning) {
+        //true if game is running
+        while (true) {
             long delta = System.currentTimeMillis() - lastLoopTime;
             lastLoopTime = System.currentTimeMillis();
 
@@ -348,14 +343,14 @@ public class Game extends Canvas {
             // makes each alien shoot
             if (!waitingForMousePress || !waitingForSpacePress) {
                 for (int i = 0; i < entities.size(); i++) {
-                    Entity entity = (Entity) entities.get(i);
-                    if (((Entity) entities.get(i)).getType().equals("alien")) {
+                    Entity entity = entities.get(i);
+                    if (entities.get(i).getType().equals("alien")) {
                         AlienShotEntity s = ((AlienEntity) entities.get(i)).tryFire();
                         if (s.getType().equals("shot")) {
                             entities.add(s);
                         } //if
                     } //if
-                    if (((Entity) entities.get(i)).getType().equals("boss")) {
+                    if (entities.get(i).getType().equals("boss")) {
                         AlienShotEntity s = ((BossAlienEntity) entities.get(i)).tryFire();
                         if (s.getType().equals("shot")) {
                             entities.add(s);
@@ -371,8 +366,8 @@ public class Game extends Canvas {
              */
             for (int i = 0; i < entities.size(); i++) {
                 for (int j = i + 1; j < entities.size(); j++) {
-                    Entity me = (Entity) entities.get(i);
-                    Entity him = (Entity) entities.get(j);
+                    Entity me = entities.get(i);
+                    Entity him = entities.get(j);
 
                     if (me.collidesWith(him)) {
                         me.collidedWith(him);
@@ -489,7 +484,7 @@ public class Game extends Canvas {
             // pause
             try {
                 Thread.sleep(0);
-            } catch (Exception e) {} //catch
+            } catch (Exception ignored) {} //catch
         } // while
     } // gameLoop
 
@@ -499,10 +494,10 @@ public class Game extends Canvas {
     public void bomb(BombEntity b) {
         Graphics2D g = (Graphics2D) strategy.getDrawGraphics();
         g.drawImage(explosion, b.getX() - 100, b.getY() - 100, 200, 200, null);
-        for (int i = 0; i < entities.size(); i++) {
-            if (((Entity) entities.get(i)).getType().equals("alien") || ((Entity) entities.get(i)).getType().equals("kamikaze")) {
-                if (Math.abs(((Entity) entities.get(i)).getX() - b.getX()) < 200 && Math.abs(((Entity) entities.get(i)).getY() - b.getY()) < 200) {
-                    removeEntities.add(entities.get(i));
+        for (Entity entity : entities) {
+            if (entity.getType().equals("alien") || entity.getType().equals("kamikaze")) {
+                if (Math.abs(entity.getX() - b.getX()) < 200 && Math.abs(entity.getY() - b.getY()) < 200) {
+                    removeEntities.add(entity);
                     notifyAlienKilled();
                 } //if
             } //if
@@ -676,11 +671,10 @@ public class Game extends Canvas {
      * returns player ship coordinates
      */
     public double[] getShipCords() {
-        double[] cords = {
+        return new double[]{
             ship.getX(),
             ship.getY()
         };
-        return cords;
     } //getShipCords
 
     /*
@@ -689,10 +683,10 @@ public class Game extends Canvas {
     public double[] getAlienCords() {
         int k = 0;
         double[] cords = new double[alienCount * 2];
-        for (int i = 0; i < entities.size(); i++) {
-            if (((Entity) entities.get(i)).getType().equals("alien")) {
-                cords[k] = ((Entity) entities.get(i)).getX();
-                cords[k + alienCount] = ((Entity) entities.get(i)).getY();
+        for (Entity entity : entities) {
+            if (entity.getType().equals("alien")) {
+                cords[k] = entity.getX();
+                cords[k + alienCount] = entity.getY();
                 k++;
 
             } //if
@@ -704,24 +698,23 @@ public class Game extends Canvas {
      * returns player mouse coordinates
      */
     public double[] getMouseCords() {
-        double[] cords = {
+        return new double[]{
             MouseInfo.getPointerInfo().getLocation().getX(),
             MouseInfo.getPointerInfo().getLocation().getY()
         };
-        return cords;
     } //getMouseCords
 
     public static void main(String[] args) {
         //saves all the images needed for game
         try {
-            img = ImageIO.read(new File("sprites/space.jpg"));
-            heart = ImageIO.read(new File("sprites/heart.png"));
-            bombPic = ImageIO.read(new File("sprites/bomb.png"));
-            coin = ImageIO.read(new File("sprites/coin.png"));
-            banner = ImageIO.read(new File("sprites/banner.png"));
-            upgradeRoom = ImageIO.read(new File("sprites/upgradeRoom.jpg"));
-            explosion = ImageIO.read(new File("sprites/explosion.png"));
-        } catch (IOException e) {} //catch
+            img = ImageIO.read(new File("./sprites/space.jpg"));
+            heart = ImageIO.read(new File("./sprites/heart.png"));
+            bombPic = ImageIO.read(new File("./sprites/bomb.png"));
+            coin = ImageIO.read(new File("./sprites/coin.png"));
+            banner = ImageIO.read(new File("./sprites/banner.png"));
+            upgradeRoom = ImageIO.read(new File("./sprites/upgradeRoom.jpg"));
+            explosion = ImageIO.read(new File("./sprites/explosion.png"));
+        } catch (IOException ignored) {} //catch
         new Game();
     } // main
 } // Game

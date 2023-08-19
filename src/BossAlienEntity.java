@@ -4,24 +4,23 @@
  * Date:        Mar 7, 2021
  * Purpose:     To create the boss entities
  ******************************************************************************************/
-import java.awt.Graphics2D;
+
 import java.awt.geom.AffineTransform;
 
 public class BossAlienEntity extends Entity {
-    private long firingInterval = 2000; //firing interval
     private long lastFire = 0; //last fired time
-    private double moveSpeed = -100; // horizontal speed
 
-    private Game game; // the game in which the alien exists
+    private final Game game; // the game in which the alien exists
 
 
     /* 
      * boss ship constructor
      */
-    public BossAlienEntity(Game g, String r, int newX, int newY, String newT, Graphics2D graphics) {
+    public BossAlienEntity(Game g, String r, int newX, int newY, String newT) {
         super(r, newX, newY, newT); // calls the constructor in Entity
         game = g;
-        dx = moveSpeed;
+        // horizontal speed
+        dx = -100;
         dy = 0;
     } // constructor
 
@@ -30,14 +29,15 @@ public class BossAlienEntity extends Entity {
      */
     public AlienShotEntity tryFire() {
         if (this.getY() < 1000 && this.getY() > 0 && this.getX() < 1800) {
+            //firing interval
+            long firingInterval = 2000;
             if ((System.currentTimeMillis() - lastFire) < firingInterval) {
                 return new AlienShotEntity(game, "sprites/shot.png", 0, 10000, "");
             } // if
 
             // otherwise add a shot
             lastFire = System.currentTimeMillis();
-            AlienShotEntity shot = new AlienShotEntity(game, "sprites/shot.png", this.getX() + 10, this.getY() + 225, "shot");
-            return shot;
+            return new AlienShotEntity(game, "sprites/shot.png", this.getX() + 10, this.getY() + 225, "shot");
         } //if
         return new AlienShotEntity(game, "sprites/shot.png", 0, 10000, "");
     } //tryFire 

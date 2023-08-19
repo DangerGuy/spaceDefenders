@@ -4,19 +4,20 @@
  * Date:        Mar 7, 2021
  * Purpose:     Manages the sprites in the game. Caches them for future use.
  ******************************************************************************************/
-import java.awt.*;
-import java.io.IOException;
-import java.net.URL;
-import java.util.HashMap;
-import java.awt.image.BufferedImage;
+
 import javax.imageio.ImageIO;
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+import java.util.HashMap;
 
 public class SpriteStore {
 
     // one instance of this class will exist
     // this instance will be accessed by Game.java
-    private static SpriteStore single = new SpriteStore();
-    private HashMap < String, Sprite > sprites = new HashMap < String, Sprite > (); // key,value pairs that stores
+    private static final SpriteStore single = new SpriteStore();
+    private final HashMap < String, Sprite > sprites = new HashMap<>(); // key,value pairs that stores
     // the three sprites (alien, ship, shot)
 
     // returns the single instance of this class
@@ -36,22 +37,19 @@ public class SpriteStore {
         // then return it
         // Note:
         if (sprites.get(ref) != null) {
-            return (Sprite) sprites.get(ref);
+            return sprites.get(ref);
         } // if
 
-        // else, load the inmage into the HashMap off the 
+        // else, load the image into the HashMap off the
         // hard drive (and hence, into memory)
 
         BufferedImage sourceImage = null;
 
         try {
             // get the image location
-            URL url = this.getClass().getClassLoader().getResource(ref);
-            if (url == null) {
-                System.out.println("Failed to load: " + ref);
-                System.exit(0); // exit program if file not found
-            }
-            sourceImage = ImageIO.read(url); // get image
+
+
+            sourceImage = ImageIO.read(new File(ref)); // get image
         } catch (IOException e) {
             System.out.println("Failed to load: " + ref);
             System.exit(0); // exit program if file not loaded

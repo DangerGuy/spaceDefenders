@@ -7,10 +7,9 @@
 import java.awt.geom.AffineTransform;
 
 public class BombEntity extends Entity {
-    private double moveSpeed = -500; // bomb move speed 
-    private double angle = 0; // bomb angle
+    private final double angle; // bomb angle
     private boolean used = false; // true if shot hits something
-    private Game game; // the game in which the ship exists
+    private final Game game; // the game in which the ship exists
 
     /* 
      * constructs the ship bomb
@@ -22,6 +21,8 @@ public class BombEntity extends Entity {
         double diffX = (game.getShipCords()[0] + 50 - game.getMouseCords()[0]);
         double diffY = (game.getShipCords()[1] + 50 - (game.getMouseCords()[1] - 30));
         double hypo = Math.sqrt(diffY * diffY + diffX * diffX);
+        // bomb move speed
+        double moveSpeed = -500;
         double ratio = hypo / moveSpeed;
         dx = diffX / ratio;
         dy = diffY / ratio;

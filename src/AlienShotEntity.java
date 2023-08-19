@@ -8,9 +8,8 @@ import java.awt.geom.AffineTransform;
 
 public class AlienShotEntity extends Entity {
 
-    private double moveSpeed = -800; // shot move speed
     private boolean used = false; // true if shot hits something
-    private Game game; // the game in which the ship exists
+    private final Game game; // the game in which the ship exists
 
     /*
      * constructs the alien shot
@@ -22,6 +21,8 @@ public class AlienShotEntity extends Entity {
         double diffX = (game.getShipCords()[0] + 50 - x);
         double diffY = (game.getShipCords()[1] + 50 - y);
         double hypo = Math.sqrt(diffY * diffY + diffX * diffX);
+        // shot move speed
+        double moveSpeed = -800;
         double ratio = hypo / moveSpeed;
         dx = -diffX / ratio;
         dy = -diffY / ratio;

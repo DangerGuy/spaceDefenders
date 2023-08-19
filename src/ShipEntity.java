@@ -7,7 +7,7 @@
 import java.awt.geom.AffineTransform;
 
 public class ShipEntity extends Entity {
-    private Game game; // the game in which the ship exists
+    private final Game game; // the game in which the ship exists
 
     /*
      * construct player ship

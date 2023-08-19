@@ -4,17 +4,16 @@
  * Date:        Mar 7, 2021
  * Purpose:     constructs kamikaze alien entities
  ******************************************************************************************/
-import java.awt.Graphics2D;
+
 import java.awt.geom.AffineTransform;
 
 public class KamikazeAlienEntity extends Entity {
-    private double moveSpeed = 200; // move speed
-    private Game game; // the game in which the alien exists
+    private final Game game; // the game in which the alien exists
 
     /* 
      * constructs kamikaze aliens
      */
-    public KamikazeAlienEntity(Game g, String r, int newX, int newY, String newT, Graphics2D graphics) {
+    public KamikazeAlienEntity(Game g, String r, int newX, int newY, String newT) {
         super(r, newX, newY, newT); // calls the constructor in Entity
         game = g;
     } // constructor
@@ -28,6 +27,8 @@ public class KamikazeAlienEntity extends Entity {
         double diffX = (game.getShipCords()[0] + 50 - x);
         double diffY = (game.getShipCords()[1] + 50 - y);
         double hypo = Math.sqrt(diffY * diffY + diffX * diffX);
+        // move speed
+        double moveSpeed = 200;
         double ratio = hypo / moveSpeed;
 
         dx = diffX / ratio;

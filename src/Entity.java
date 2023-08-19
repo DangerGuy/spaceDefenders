@@ -15,9 +15,9 @@ public abstract class Entity {
     protected double dx; // horizontal speed (px/s)  + -> right
     protected double dy; // vertical speed (px/s) + -> down
     protected AffineTransform affline;
-    private Rectangle me = new Rectangle(); // bounding rectangle of
+    private final Rectangle me = new Rectangle(); // bounding rectangle of
     // this entity
-    private Rectangle him = new Rectangle(); // bounding rect. of other
+    private final Rectangle him = new Rectangle(); // bounding rect. of other
     // entities
 
     /* 
@@ -47,14 +47,6 @@ public abstract class Entity {
     public void setVerticalMovement(double newDY) {
         dy = newDY;
     } // setVerticalMovement
-
-    public double getHorizontalMovement() {
-        return dx;
-    } // getHorizontalMovement
-
-    public double getVerticalMovement() {
-        return dy;
-    } // getVerticalMovement
 
     // get position
     public int getX() {

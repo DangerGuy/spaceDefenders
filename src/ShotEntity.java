@@ -9,7 +9,7 @@ import java.awt.geom.AffineTransform;
 public class ShotEntity extends Entity {
     public double moveSpeed = -1000; // shot move speed
     private boolean used = false; // true if shot hits something
-    private Game game; // the game in which the ship exists
+    private final Game game; // the game in which the ship exists
 
     /* 
      * shot constructor for player ship
